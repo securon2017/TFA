@@ -1,4 +1,6 @@
-﻿namespace TFA.Storage
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TFA.Storage
 {
     public class Comment
     {
@@ -11,6 +13,14 @@
         public Guid TopicId { get; set; }
 
         public Guid UserId { get; set; }
+
+
+        [ForeignKey(nameof(UserId))]
+        public User Author { get; set; }
+
+
+        [ForeignKey(nameof(TopicId))]
+        public Topic Topic { get; set; }
 
         public string Text { get; set; }
     }

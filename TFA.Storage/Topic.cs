@@ -1,4 +1,6 @@
-﻿namespace TFA.Storage
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TFA.Storage
 {
     public class Topic
     {
@@ -13,5 +15,14 @@
         public Guid ForumId { get; set; }
 
         public string Title { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public User Author { get; set; }
+
+        [ForeignKey(nameof(ForumId))]
+        public Forum Forum { get; set; }
+
+        [InverseProperty(nameof(Comment.Topic))]
+        public ICollection<Comment> Comments { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TFA.Storage
 {
@@ -8,6 +9,15 @@ namespace TFA.Storage
 
         [MaxLength(20)]
         public string Login { get; set; }
+
+
+        [InverseProperty(nameof(Topic.Author))]
+        public ICollection<Topic> Topics { get; set; }
+
+
+        [InverseProperty(nameof(Comment.Author))]
+        public ICollection<Comment> Comments { get; set; }
+
 
     }
 }
