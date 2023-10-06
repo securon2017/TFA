@@ -7,7 +7,7 @@ namespace TFA.Storage
     public class Forum
     {
         [Key]        
-        public Guid TopicId { get; set; }
+        public Guid ForumId { get; set; }
 
         public string Title { get; set; }
 

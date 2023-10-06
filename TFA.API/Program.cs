@@ -9,6 +9,8 @@ namespace TFA.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var connectionString = builder.Configuration.GetConnectionString("Postgres");
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -16,7 +18,7 @@ namespace TFA.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ForumDbContext>(options =>
-                options.UseNpgsql("Host=localhost;Port=5432;Database=TFA;Username=dmytro;Password=dnipro"));
+                options.UseNpgsql(connectionString));
 
             var app = builder.Build();
 

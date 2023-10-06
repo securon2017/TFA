@@ -55,7 +55,7 @@ namespace TFA.Storage.Migrations
 
             modelBuilder.Entity("TFA.Storage.Forum", b =>
                 {
-                    b.Property<Guid>("TopicId")
+                    b.Property<Guid>("ForumId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -63,7 +63,7 @@ namespace TFA.Storage.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("TopicId");
+                    b.HasKey("ForumId");
 
                     b.ToTable("forums");
                 });
@@ -92,8 +92,7 @@ namespace TFA.Storage.Migrations
 
                     b.HasKey("TopicId");
 
-                    b.HasIndex("ForumId")
-                        .IsUnique();
+                    b.HasIndex("ForumId");
 
                     b.HasIndex("UserId");
 
@@ -138,8 +137,8 @@ namespace TFA.Storage.Migrations
             modelBuilder.Entity("TFA.Storage.Topic", b =>
                 {
                     b.HasOne("TFA.Storage.Forum", "Forum")
-                        .WithOne()
-                        .HasForeignKey("TFA.Storage.Topic", "ForumId")
+                        .WithMany()
+                        .HasForeignKey("ForumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

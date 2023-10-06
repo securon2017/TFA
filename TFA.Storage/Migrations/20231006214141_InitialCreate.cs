@@ -15,12 +15,12 @@ namespace TFA.Storage.Migrations
                 name: "forums",
                 columns: table => new
                 {
-                    TopicId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ForumId = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_forums", x => x.TopicId);
+                    table.PrimaryKey("PK_forums", x => x.ForumId);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +59,7 @@ namespace TFA.Storage.Migrations
                         name: "FK_Topics_forums_ForumId",
                         column: x => x.ForumId,
                         principalTable: "forums",
-                        principalColumn: "TopicId",
+                        principalColumn: "ForumId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -104,8 +104,7 @@ namespace TFA.Storage.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Topics_ForumId",
                 table: "Topics",
-                column: "ForumId",
-                unique: true);
+                column: "ForumId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Topics_UserId",
