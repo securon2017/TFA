@@ -5,6 +5,7 @@ namespace TFA.Storage
 {
     public class User
     {
+        [Key]
         public Guid UserId { get; set; }
 
         [MaxLength(20)]

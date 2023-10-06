@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TFA.Storage
 {
     public class Comment
     {
+        [Key]
         public Guid CommentId { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
