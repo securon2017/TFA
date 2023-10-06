@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TFA.API.Models;
-using TFA.Storage;
+using TFA.Domain.UseCases.GetForums;
 
 namespace TFA.API.Controllers
 {
@@ -13,16 +12,15 @@ namespace TFA.API.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(ForumModel[]))]
         public async Task<IActionResult> GetForums(
-            [FromServices] ForumDbContext context,
+            [FromServices] IGetForumsUseCase useCase,
             CancellationToken cancellationToken)
         {
-            var forums = await context.Forums
-                .Select(f => new ForumModel
-                {
-                    Id = f.ForumId,
-                    Title = f.Title
-                }).ToArrayAsync();
-            return null;
+            var forums = await useCase.Execute(cancellationToken);
+            return Ok(forums.Select(f => new ForumModel
+            {
+                Id = f.Id,
+                Title = f.Title,
+            }));
         }
     }
 }

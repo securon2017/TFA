@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TFA.Domain.UseCases.GetForums;
 using TFA.Storage;
 
 namespace TFA.API
@@ -12,6 +13,9 @@ namespace TFA.API
             var connectionString = builder.Configuration.GetConnectionString("Postgres");
 
             // Add services to the container.
+
+            builder.Services.AddScoped<IGetForumsUseCase, GetForumsUseCase>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
