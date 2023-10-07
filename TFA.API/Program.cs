@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 using TFA.Storage;
 
@@ -15,6 +16,7 @@ namespace TFA.API
             // Add services to the container.
 
             builder.Services.AddScoped<IGetForumsUseCase, GetForumsUseCase>();
+            builder.Services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
 
 
             builder.Services.AddControllers();
