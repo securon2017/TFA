@@ -13,8 +13,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TFA.Storage\TFA.Storage.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TFA.Domain.Authentication;
+﻿using TFA.Domain.Authentication;
 using TFA.Domain.Authorization;
 using TFA.Domain.Exceptions;
 using TFA.Domain.ModelsDTO;
-using TFA.Storage;
 
 namespace TFA.Domain.UseCases.CreateTopic
 {
@@ -15,7 +13,7 @@ namespace TFA.Domain.UseCases.CreateTopic
 
         public CreateTopicUseCase(
             IIntentionManager intentionManager,
-            IIdentityProvider identityProvider, 
+            IIdentityProvider identityProvider,
             ICreateTopicStorage storage)
         {
             _intentionManager = intentionManager;
@@ -27,9 +25,9 @@ namespace TFA.Domain.UseCases.CreateTopic
             _intentionManager.ThrowIfForbidden(TopicIntention.Create);
 
             var forumExists = await _storage.ForumExists(forumId, cancellationToken);
-            if(!forumExists) 
-            { 
-                throw new ForumNotFoundException(forumId); 
+            if (!forumExists)
+            {
+                throw new ForumNotFoundException(forumId);
             }
 
             return await _storage.CreateTopic(forumId, _identityProvider.Current.UserId, title, cancellationToken);
