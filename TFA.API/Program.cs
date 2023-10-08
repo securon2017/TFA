@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TFA.Domain.Authorization;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 using TFA.Storage;
@@ -17,6 +18,9 @@ namespace TFA.API
 
             builder.Services.AddScoped<IGetForumsUseCase, GetForumsUseCase>();
             builder.Services.AddScoped<ICreateTopicUseCase, CreateTopicUseCase>();
+            builder.Services.AddScoped<ICreateTopicStorage>();
+            builder.Services.AddScoped<IIntentionResolver, TopicIntentionResolver>();
+            builder.Services.AddScoped<IIntentionManager, IntentionManager>();
 
 
             builder.Services.AddControllers();
