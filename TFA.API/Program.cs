@@ -1,7 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TFA.Domain;
 using TFA.Domain.Authentication;
 using TFA.Domain.Authorization;
+using TFA.Domain.ModelsDTO;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 using TFA.Storage;
@@ -28,6 +30,7 @@ namespace TFA.API
             builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
             builder.Services.AddScoped<IGuidFactory, GuidFactory>();
             builder.Services.AddScoped<IMomentProvider, MomentProvider>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ForumDTO>();
 
 
             builder.Services.AddControllers();

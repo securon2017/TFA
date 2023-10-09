@@ -1,14 +1,13 @@
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
-using System.Security.Principal;
 using TFA.Domain.Authentication;
 using TFA.Domain.Authorization;
 using TFA.Domain.Exceptions;
 using TFA.Domain.ModelsDTO;
 using TFA.Domain.UseCases.CreateTopic;
-using TFA.Storage;
 
 namespace TFA.Domain.Tests
 {
@@ -26,7 +25,7 @@ namespace TFA.Domain.Tests
         {
             storage = new Mock<ICreateTopicStorage>();
             forumExistSetup = storage.Setup(x => x.ForumExists(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
-            createTopicSetup = storage.Setup(x => 
+            createTopicSetup = storage.Setup(x =>
                 x.CreateTopic(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
             var identity = new Mock<Authentication.IIdentity>();
@@ -37,7 +36,11 @@ namespace TFA.Domain.Tests
             intentionManager = new Mock<IIntentionManager>();
             intentionIsAllowedSetup = intentionManager.Setup(p => p.IsAllowed(It.IsAny<TopicIntention>()));
 
-            _sut = new CreateTopicUseCase(intentionManager.Object, identityProvider.Object, storage.Object);
+            var validator = new Mock<IValidator<CreateTopicCommand>>();
+            validator.Setup(v => v.ValidateAsync(It.IsAny<CreateTopicCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidationResult());
+
+            _sut = new CreateTopicUseCase(validator.Object, intentionManager.Object, identityProvider.Object, storage.Object);
         }
 
         [Fact]
@@ -45,7 +48,7 @@ namespace TFA.Domain.Tests
         {
             var forumId = Guid.Parse("87029B64-8551-4E4E-9F14-8945CC4098CD");
             intentionIsAllowedSetup.Returns(false);
-            await _sut.Invoking(s => s.Execute(forumId, "whatever", CancellationToken.None))
+            await _sut.Invoking(s => s.Execute(new CreateTopicCommand(forumId, "whatever"), CancellationToken.None))
                 .Should().ThrowAsync<IntentionManagerException>();
             intentionManager.Verify(m => m.IsAllowed(TopicIntention.Create));
         }
@@ -59,7 +62,7 @@ namespace TFA.Domain.Tests
             intentionIsAllowedSetup.Returns(true);
             forumExistSetup.ReturnsAsync(false);
 
-            await _sut.Invoking(s => s.Execute(forumId, "Some Title", CancellationToken.None))
+            await _sut.Invoking(s => s.Execute(new CreateTopicCommand(forumId, "Some Title"), CancellationToken.None))
                 .Should().ThrowAsync<ForumNotFoundException>();
 
             storage.Verify(s => s.ForumExists(forumId, It.IsAny<CancellationToken>()));
@@ -77,10 +80,10 @@ namespace TFA.Domain.Tests
             var expected = new TopicDTO();
             createTopicSetup.ReturnsAsync(expected);
 
-            var actual = await _sut.Execute(forumId, "Hello world!", CancellationToken.None);
+            var actual = await _sut.Execute(new CreateTopicCommand(forumId, "Hello world!"), CancellationToken.None);
             actual.Should().Be(expected);
 
-            storage.Verify(s => 
+            storage.Verify(s =>
                 s.CreateTopic(forumId, userId, "Hello world!", It.IsAny<CancellationToken>()), Times.Once);
         }
     }

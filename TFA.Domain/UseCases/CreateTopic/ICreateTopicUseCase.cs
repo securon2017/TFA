@@ -4,6 +4,6 @@ namespace TFA.Domain.UseCases.CreateTopic
 {
     public interface ICreateTopicUseCase
     {
-        Task<TopicDTO> Execute(Guid forumId, string Title, CancellationToken cancellationToken);
+        Task<TopicDTO> Execute(CreateTopicCommand command, CancellationToken cancellationToken);
     }
 }

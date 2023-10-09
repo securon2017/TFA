@@ -1,8 +1,8 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using TFA.API.Models;
 using TFA.Domain.Authorization;
 using TFA.Domain.Exceptions;
-using TFA.Domain.ModelsDTO;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 
@@ -39,7 +39,8 @@ namespace TFA.API.Controllers
         {
             try
             {
-                var topic = await useCase.Execute(forumId, request.Title, cancellationToken);
+                var command = new CreateTopicCommand(forumId, request.Title);
+                var topic = await useCase.Execute(command, cancellationToken);
                 return CreatedAtRoute(nameof(GetForums), new TopicViewModel
                 {
                     Id = topic.Id,
@@ -54,10 +55,11 @@ namespace TFA.API.Controllers
                 {
                     IntentionManagerException => Forbid(),
                     ForumNotFoundException => StatusCode(StatusCodes.Status410Gone),
+                    ValidationException => BadRequest(),
                     _ => StatusCode(StatusCodes.Status500InternalServerError)
                 };
             }
-           
+
         }
 
     }
