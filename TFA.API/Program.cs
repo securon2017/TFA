@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using TFA.API.Midddlewares;
 using TFA.Domain;
 using TFA.Domain.Authentication;
 using TFA.Domain.Authorization;
@@ -55,6 +56,8 @@ namespace TFA.API
 
 
             app.MapControllers();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.Run();
         }

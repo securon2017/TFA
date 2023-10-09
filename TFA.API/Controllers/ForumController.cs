@@ -1,8 +1,5 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using TFA.API.Models;
-using TFA.Domain.Authorization;
-using TFA.Domain.Exceptions;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 
@@ -28,6 +25,7 @@ namespace TFA.API.Controllers
         }
 
         [HttpPost("{forumId:guid}/topics")]
+        [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [ProducesResponseType(410)]
         [ProducesResponseType(201, Type = typeof(TopicViewModel))]
@@ -37,28 +35,16 @@ namespace TFA.API.Controllers
             [FromServices] ICreateTopicUseCase useCase,
             CancellationToken cancellationToken)
         {
-            try
-            {
-                var command = new CreateTopicCommand(forumId, request.Title);
-                var topic = await useCase.Execute(command, cancellationToken);
-                return CreatedAtRoute(nameof(GetForums), new TopicViewModel
-                {
-                    Id = topic.Id,
-                    Title = topic.Title,
-                    CreatedAt = topic.CreatedAt
-                });
-            }
-            catch (Exception exception)
-            {
 
-                return exception switch
-                {
-                    IntentionManagerException => Forbid(),
-                    ForumNotFoundException => StatusCode(StatusCodes.Status410Gone),
-                    ValidationException => BadRequest(),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError)
-                };
-            }
+            var command = new CreateTopicCommand(forumId, request.Title);
+            var topic = await useCase.Execute(command, cancellationToken);
+            return CreatedAtRoute(nameof(GetForums), new TopicViewModel
+            {
+                Id = topic.Id,
+                Title = topic.Title,
+                CreatedAt = topic.CreatedAt
+            });
+
 
         }
 
