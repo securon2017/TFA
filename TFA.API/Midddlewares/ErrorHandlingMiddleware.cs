@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using TFA.Domain.Authorization;
 using TFA.Domain.Exceptions;
@@ -16,27 +17,42 @@ namespace TFA.API.Midddlewares
 
         public async Task InvokeAsync(
             HttpContext httpContext,
+            ILogger<ErrorHandlingMiddleware> logger,
             ProblemDetailsFactory problemDetailsFactory)
         {
             try
             {
+                logger.LogError("Error handling started for request with path {RequestPath}", httpContext.Request.Path);
                 await next.Invoke(httpContext);
             }
             catch (Exception exception)
             {
-                var problemDetails = exception switch
+                logger.LogError(exception, "Error has happened with {RequestPath}, the message is {ErrorMessage}", httpContext.Request.Path, exception.Message);
+
+                ProblemDetails problemDetails;
+
+                switch (exception)
                 {
-                    IntentionManagerException intentionManagerException =>
-                        problemDetailsFactory.CreateFrom(httpContext, intentionManagerException),
-                    ValidationException validationException =>
-                        problemDetailsFactory.CreateFrom(httpContext, validationException),
-                    DomainException domainException =>
-                        problemDetailsFactory.CreateFrom(httpContext, domainException),
-                    _ => problemDetailsFactory.CreateProblemDetails(httpContext, StatusCodes.Status500InternalServerError,
-                            "Unhandled error! Please contact us!", detail: exception.Message)
+                    case IntentionManagerException intentionManagerException:
+                        problemDetails = problemDetailsFactory.CreateFrom(httpContext, intentionManagerException);
+                        break;
+                    case ValidationException validationException:
+                        problemDetails = problemDetailsFactory.CreateFrom(httpContext, validationException);
+                        break;
+                    case DomainException domainException:
+                        problemDetails = problemDetailsFactory.CreateFrom(httpContext, domainException);
+                        logger.LogError(domainException, "Domain exception occured");
+                        break;
+                    default:
+                        problemDetails = problemDetailsFactory.CreateProblemDetails(httpContext, StatusCodes.Status500InternalServerError,
+                            "Unhandled error! Please contact us!");
+                        logger.LogError(exception, "Unhandled exception occured!");
+                        break;
                 };
+
+
                 httpContext.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
-                await httpContext.Response.WriteAsJsonAsync(problemDetails);
+                await httpContext.Response.WriteAsJsonAsync(problemDetails, problemDetails.GetType());
             }
         }
     }

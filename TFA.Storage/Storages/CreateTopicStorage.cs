@@ -1,24 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TFA.Domain;
 using TFA.Domain.ModelsDTO;
 using TFA.Domain.UseCases.CreateTopic;
 
 namespace TFA.Storage.Storages
 {
-    public class CreateTopicStorage : ICreateTopicStorage
+    internal class CreateTopicStorage : ICreateTopicStorage
     {
         private readonly IGuidFactory _guidFactory;
         private readonly IMomentProvider _momentProvider;
         private readonly ForumDbContext _dbContext;
 
         public CreateTopicStorage(
-            IGuidFactory guidFactory, 
-            IMomentProvider momentProvider, 
+            IGuidFactory guidFactory,
+            IMomentProvider momentProvider,
             ForumDbContext dbContext)
         {
             _guidFactory = guidFactory;
@@ -52,6 +46,6 @@ namespace TFA.Storage.Storages
 
         public async Task<bool> ForumExists(Guid forumId, CancellationToken cancellationToken) =>
             await _dbContext.Forums.AnyAsync(f => f.ForumId == forumId, cancellationToken);
-        
+
     }
 }
