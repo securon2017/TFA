@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TFA.API", "TFA.API\TFA.API.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TFA.Domain.Tests", "TFA.Domain.Tests\TFA.Domain.Tests.csproj", "{5745F42F-DE26-49D0-B21C-A4CD4E0BBF8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFA.Domain.DependencyInjection", "TFA.Domain.DependencyInjection\TFA.Domain.DependencyInjection.csproj", "{DA8CB4F6-F808-41D0-8744-6E2B2A99C36B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TFA.Domain.DependencyInjection", "TFA.Domain.DependencyInjection\TFA.Domain.DependencyInjection.csproj", "{DA8CB4F6-F808-41D0-8744-6E2B2A99C36B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFA.Storage.DependencyInjection", "TFA.Storage.DependencyInjection\TFA.Storage.DependencyInjection.csproj", "{53A9E226-48FA-4B4B-BF5B-E2A3453641A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TFA.Storage.DependencyInjection", "TFA.Storage.DependencyInjection\TFA.Storage.DependencyInjection.csproj", "{53A9E226-48FA-4B4B-BF5B-E2A3453641A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution-items", "Solution-items", "{FE1F2547-79A8-4A7E-B6BC-26FECFDC6947}"
 	ProjectSection(SolutionItems) = preProject

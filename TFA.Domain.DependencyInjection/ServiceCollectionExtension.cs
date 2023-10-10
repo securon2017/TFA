@@ -22,7 +22,7 @@ namespace TFA.Domain.DependencyInjection
                 .AddScoped<IIdentityProvider, IdentityProvider>();
 
             services
-                .AddValidatorsFromAssemblyContaining<ForumDTO>();
+                .AddValidatorsFromAssemblyContaining<ForumDTO>(includeInternalTypes: true);
 
             return services;
         } 

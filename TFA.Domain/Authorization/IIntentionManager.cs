@@ -9,7 +9,7 @@ namespace TFA.Domain.Authorization
         bool IsAllowed<TIntention, TObject>(TIntention intention, TObject target) where TIntention : struct;
     }
 
-    public class IntentionManager : IIntentionManager
+    internal class IntentionManager : IIntentionManager
     {
         private readonly IEnumerable<IIntentionResolver> _resolvers;
         private readonly IIdentityProvider _identityProvider;
@@ -33,7 +33,7 @@ namespace TFA.Domain.Authorization
         }
     }
 
-    public static class IntentionManagerExtension
+    internal static class IntentionManagerExtension
     {
         public static void ThrowIfForbidden<TIntention>(this IIntentionManager intentionManager, TIntention intention)
             where TIntention : struct
