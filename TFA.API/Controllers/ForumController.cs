@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TFA.API.Models;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
+using TFA.Domain.UseCases.GetTopics;
 
 namespace TFA.API.Controllers
 {
@@ -44,9 +45,20 @@ namespace TFA.API.Controllers
                 Title = topic.Title,
                 CreatedAt = topic.CreatedAt
             });
-
-
         }
+
+        [HttpGet("{forumId:guid}/topics")]
+        public async Task<IActionResult> GetTopics(
+            [FromRoute] Guid forumId,
+            [FromQuery] int skip,
+            [FromQuery] int take,
+            [FromServices] IGetTopicsUseCase useCase,
+            CancellationToken cancellationToken)
+        {
+            var (resources, totalCount) = await useCase.Execute(new GetTopicsQuery(forumId, skip, take), cancellationToken);
+            return Ok(new { resources, totalCount });
+        }
+
 
     }
 }

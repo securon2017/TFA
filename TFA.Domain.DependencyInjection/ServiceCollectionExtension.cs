@@ -5,6 +5,7 @@ using TFA.Domain.Authorization;
 using TFA.Domain.ModelsDTO;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
+using TFA.Domain.UseCases.GetTopics;
 
 namespace TFA.Domain.DependencyInjection
 {
@@ -15,6 +16,7 @@ namespace TFA.Domain.DependencyInjection
             services
                 .AddScoped<IGetForumsUseCase, GetForumsUseCase>()
                 .AddScoped<ICreateTopicUseCase, CreateTopicUseCase>()
+                .AddScoped<IGetTopicsUseCase,  GetTopicsUseCase>()
                 .AddScoped<IIntentionResolver, TopicIntentionResolver>();
 
             services
@@ -23,6 +25,8 @@ namespace TFA.Domain.DependencyInjection
 
             services
                 .AddValidatorsFromAssemblyContaining<ForumDTO>(includeInternalTypes: true);
+
+            services.AddMemoryCache();
 
             return services;
         } 

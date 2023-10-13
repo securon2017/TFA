@@ -44,8 +44,7 @@ namespace TFA.Storage.Storages
                 }).FirstAsync(cancellationToken);
         }
 
-        public async Task<bool> ForumExists(Guid forumId, CancellationToken cancellationToken) =>
-            await _dbContext.Forums.AnyAsync(f => f.ForumId == forumId, cancellationToken);
+
 
     }
 }

@@ -25,7 +25,7 @@ namespace TFA.API.Midddlewares
         {
             return factory.CreateProblemDetails(context, exception.ErrorCode switch
             {
-                ErrorCode.Gone => StatusCodes.Status410Gone,
+                DomainErrorCode.Gone => StatusCodes.Status410Gone,
                 _ => StatusCodes.Status500InternalServerError
             },
             detail: exception.Message);

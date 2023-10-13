@@ -4,10 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TFA.Domain.Exceptions
+namespace TFA.Domain.UseCases.GetTopics
 {
-    public enum ErrorCode
-    {
-        Gone = 410
-    }
+    public record GetTopicsQuery(Guid ForumId, int Skip, int Take);
 }
