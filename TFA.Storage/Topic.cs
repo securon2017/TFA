@@ -16,6 +16,7 @@ namespace TFA.Storage
 
         public Guid ForumId { get; set; }
 
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [ForeignKey(nameof(UserId))]
