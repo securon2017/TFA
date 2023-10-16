@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TFA.Domain.Authentication;
 using TFA.Domain.Authorization;
 using TFA.Domain.ModelsDTO;
+using TFA.Domain.UseCases.CreateForum;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
 using TFA.Domain.UseCases.GetTopics;
@@ -14,6 +15,8 @@ namespace TFA.Domain.DependencyInjection
         public static IServiceCollection AddForumDomain(this IServiceCollection services) 
         {
             services
+                .AddScoped<ICreateForumUseCase, CreateForumUseCase>()
+                .AddScoped<IIntentionResolver, ForumIntentionResolver>()
                 .AddScoped<IGetForumsUseCase, GetForumsUseCase>()
                 .AddScoped<ICreateTopicUseCase, CreateTopicUseCase>()
                 .AddScoped<IGetTopicsUseCase,  GetTopicsUseCase>()
@@ -25,8 +28,6 @@ namespace TFA.Domain.DependencyInjection
 
             services
                 .AddValidatorsFromAssemblyContaining<ForumDTO>(includeInternalTypes: true);
-
-            services.AddMemoryCache();
 
             return services;
         } 

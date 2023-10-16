@@ -7,7 +7,7 @@ using TFA.Storage.DependencyInjection;
 
 namespace TFA.API
 {
-    public class Program
+    public partial class  Program
     {
         public static void Main(string[] args)
         {
@@ -59,6 +59,10 @@ namespace TFA.API
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.Run();
+
         }
+
     }
+    public partial class Program { }
+
 }
