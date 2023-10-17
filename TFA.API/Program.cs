@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Filters;
+using TFA.API.Mapping;
 using TFA.API.Midddlewares;
 using TFA.Domain.DependencyInjection;
 using TFA.Storage.DependencyInjection;
@@ -32,6 +34,8 @@ namespace TFA.API
                 .AddForumDomain()
                 .AddForumStorage(builder.Configuration.GetConnectionString("Postgres"));
 
+            builder.Services.AddAutoMapper(config => config.AddProfile<ApiProfile>());
+
 
 
             builder.Services.AddControllers();
@@ -41,6 +45,9 @@ namespace TFA.API
 
 
             var app = builder.Build();
+
+            var mapper = app.Services.GetRequiredService<IMapper>();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

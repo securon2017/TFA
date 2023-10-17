@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using TFA.Domain.UseCases.CreateForum;
 using TFA.Domain.UseCases.CreateTopic;
 using TFA.Domain.UseCases.GetForums;
@@ -27,6 +28,11 @@ namespace TFA.Storage.DependencyInjection
 
 
             services.AddMemoryCache();
+
+            services.AddAutoMapper(congig =>
+            {
+                congig.AddMaps(Assembly.GetAssembly(typeof(ForumDbContext)));
+            });
 
             return services;
         }

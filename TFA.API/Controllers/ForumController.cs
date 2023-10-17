@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TFA.API.Models;
 using TFA.Domain.UseCases.CreateForum;
@@ -16,14 +17,11 @@ namespace TFA.API.Controllers
         [ProducesResponseType(200, Type = typeof(ForumModel[]))]
         public async Task<IActionResult> GetForums(
             [FromServices] IGetForumsUseCase useCase,
+            [FromServices] IMapper mapper,
             CancellationToken cancellationToken)
         {
             var forums = await useCase.Execute(cancellationToken);
-            return Ok(forums.Select(f => new ForumModel
-            {
-                Id = f.Id,
-                Title = f.Title,
-            }));
+            return Ok(forums.Select(mapper.Map<ForumModel>));
         }
 
         [HttpPost("{forumId:guid}/topics")]
@@ -35,33 +33,29 @@ namespace TFA.API.Controllers
             Guid forumId,
             [FromBody] CreateTopic request,
             [FromServices] ICreateTopicUseCase useCase,
+            [FromServices] IMapper mapper,
             CancellationToken cancellationToken)
         {
 
             var command = new CreateTopicCommand(forumId, request.Title);
             var topic = await useCase.Execute(command, cancellationToken);
-            return CreatedAtRoute(nameof(GetForums), new TopicViewModel
-            {
-                Id = topic.Id,
-                Title = topic.Title,
-                CreatedAt = topic.CreatedAt
-            });
+            return CreatedAtRoute(nameof(GetForums), mapper.Map<TopicViewModel>(topic));
         }
 
 
         [HttpPost]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(201, Type = typeof(ForumModel))]
         public async Task<IActionResult> CreateForum(
             [FromBody] CreateForum request,
             [FromServices] ICreateForumUseCase useCase,
+            [FromServices] IMapper mapper,
             CancellationToken cancellationToken)
         {
             var command = new CreateForumCommand(request.Title);
             var forum = await useCase.Execute(command, cancellationToken);
-            return CreatedAtRoute(nameof(GetForums), new ForumModel
-            {
-                Id = forum.Id,
-                Title = forum.Title
-            });
+            return CreatedAtRoute(nameof(GetForums), mapper.Map<ForumModel>(forum));
         }
 
 
@@ -75,15 +69,11 @@ namespace TFA.API.Controllers
             [FromQuery] int skip,
             [FromQuery] int take,
             [FromServices] IGetTopicsUseCase useCase,
+            [FromServices] IMapper mapper,
             CancellationToken cancellationToken)
         {
             var (resources, totalCount) = await useCase.Execute(new GetTopicsQuery(forumId, skip, take), cancellationToken);
-            return Ok(new { resources = resources.Select(r=>new TopicViewModel
-            {
-                Id = r.Id,
-                Title =r.Title,
-                CreatedAt = r.CreatedAt,
-            }), totalCount });
+            return Ok(new { resources = resources.Select(mapper.Map<TopicViewModel>) });
         }
 
 
