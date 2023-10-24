@@ -1,32 +1,20 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
-using Serilog.Filters;
-using TFA.API.Mapping;
+using System.Reflection;
+using TFA.API.DependencyInjection;
 using TFA.API.Midddlewares;
 using TFA.Domain.DependencyInjection;
 using TFA.Storage.DependencyInjection;
 
 namespace TFA.API
 {
-    public partial class  Program
+    public partial class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddLogging(b => b.AddSerilog(new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .Enrich.WithProperty("Application", "TFA.API")
-                .Enrich.WithProperty("Envirotment", builder.Environment.EnvironmentName)
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByExcluding(Matching.FromSource("Microsoft")))
-                    .WriteTo.OpenSearch(
-                builder.Configuration.GetConnectionString("Logs"),
-                "forum-logs-{0:yyyy.MM.dd}")
-                .WriteTo.Logger(lc => lc.WriteTo.Console())
-                .CreateLogger()));
-
+            builder.Services.AddApiLogging(builder.Configuration, builder.Environment);
 
             // Add services to the container.
 
@@ -34,7 +22,7 @@ namespace TFA.API
                 .AddForumDomain()
                 .AddForumStorage(builder.Configuration.GetConnectionString("Postgres"));
 
-            builder.Services.AddAutoMapper(config => config.AddProfile<ApiProfile>());
+            builder.Services.AddAutoMapper(config => config.AddMaps(Assembly.GetExecutingAssembly()));
 
 
 
